@@ -26,11 +26,11 @@ services:
     - "--log.level=ERROR"
     - "--api.insecure=true"
     - "--providers.docker=true"
-    - "--providers.docker.exposedbydefault=tr"
+    - "--providers.docker.exposedbydefault=true"
     - "--entryPoints.web.address=:80"
     - "--entryPoints.websecure.address=:443"
     - "--entrypoints.websecure.http.tls=true"
-    - "--entrypoints.websecure.http.tls.certresolver=myresolver"
+    # - "--entrypoints.websecure.http.tls.certresolver=myresolver"
     - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
     - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
     - "--metrics.prometheus=true"
@@ -74,6 +74,7 @@ services:
       migrate:
         condition: service_completed_successfully
     labels:
+      - "traefik.http.services.omnivore-backend.entrypoints=websecure"
       - "traefik.http.services.omnivore-backend.loadbalancer.server.port=8080"
       - "traefik.http.routers.omnivore-backend.rule=Host(`omnivore.m1xxos.com`) && PathPrefix(`/api`)"
       - "traefik.http.routers.omnivore-backend.service=omnivore-backend"
@@ -98,8 +99,9 @@ services:
       api:
         condition: service_healthy
     labels:
+      - "traefik.http.services.omnivore-web.entrypoints=websecure"
       - "traefik.http.services.omnivore-web.loadbalancer.server.port=8080"
-      - "traefik.http.routers.omnivore-web.rule=Host(`omnivore.m1xxos.com`) && PathPrefix(`/api/client/auth`, `/api/save`)"
+      - "traefik.http.routers.omnivore-web.rule=Host(`omnivore.m1xxos.com`) && PathPrefix(`/api/client/auth`) || PathPrefix(`/api/save`)"
       - "traefik.http.routers.omnivore-web.service=omnivore-web"
       - "traefik.http.routers.omnivore-web-root.rule=Host(`omnivore.m1xxos.com`) && PathPrefix(`/`)"
       - "traefik.http.routers.omnivore-web-root.service=omnivore-web"
@@ -112,6 +114,7 @@ services:
     env_file:
       - .env
     labels:
+      - "traefik.http.services.omnivore-imageproxy.entrypoints=websecure"
       - "traefik.http.services.omnivore-imageproxy.loadbalancer.server.port=8080"
       - "traefik.http.routers.omnivore-imageproxy.rule=Host(`omnivore.m1xxos.com`) && PathPrefix(`/images`)"
       - "traefik.http.middlewares.omnivore-imageproxy-rewrite.replacepathregex.regex=^/images/(.*)"
@@ -163,6 +166,7 @@ services:
     volumes:
       - minio_data:/data
     labels:
+      - "traefik.http.services.omnivore-minio.entrypoints=websecure"
       - "traefik.http.services.omnivore-bucket.loadbalancer.server.port=9000"
       - "traefik.http.routers.omnivore-bucket.rule=Host(`omnivore.m1xxos.com`) && PathPrefix(`/bucket`)"
       - "traefik.http.routers.omnivore-bucket.service=omnivore-bucket"
@@ -196,6 +200,7 @@ services:
       redis:
         condition: service_healthy
     labels:
+      - "traefik.http.services.omnivore-mail-watch-server.entrypoints=websecure"
       - "traefik.http.services.omnivore-mail.loadbalancer.server.port=8080"
       - "traefik.http.routers.omnivore-mail.rule=Host(`omnivore.m1xxos.com`) && PathPrefix(`/mail`)"
       - "traefik.http.routers.omnivore-mail.service=omnivore-mail"
