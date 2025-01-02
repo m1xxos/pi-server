@@ -112,7 +112,7 @@ services:
       - "traefik.http.routers.omnivore-web-root.service=omnivore-web"
 
   image-proxy:
-    image: ghcr.io/m1xxos/omnivore-image-proxy:sha-d383e44
+    image: ghcr.io/m1xxos/omnivore-image-proxy:sha-3cf79c6
     container_name: "omnivore-image-proxy"
     ports:
       - "7070:8080"
