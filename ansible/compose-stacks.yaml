@@ -1,0 +1,8 @@
+- name: Copy stack files
+  hosts: all
+  tasks:
+    - name: Copy stacks
+      ansible.builtin.copy:
+        src: "../stacks/"
+        dest: /opt/stacks
+        mode: '0755'
