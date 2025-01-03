@@ -19,7 +19,7 @@ services:
     env_file:
       - .env
   
-  traeffik:
+  traefik:
     image: traefik:v3.2
     container_name: traefik
     command:
@@ -30,9 +30,11 @@ services:
     - "--entryPoints.web.address=:80"
     - "--entryPoints.websecure.address=:443"
     - "--entrypoints.websecure.http.tls=true"
-    # - "--entrypoints.websecure.http.tls.certresolver=myresolver"
     # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
     # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+    - "--certificatesresolvers.based.acme.tlschallenge=true"
+    - "--certificatesresolvers.based.acme.email=bulynin.misha@gmail.com"
+    - "--certificatesresolvers.based.acme.storage=/letsencrypt/acme.json"
     - "--metrics.prometheus=true"
     - "--accesslog=true"
     - "--accesslog.addinternals"
@@ -42,6 +44,7 @@ services:
     - "8088:8080"
     volumes:
     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    - "./letsencrypt:/letsencrypt"
     restart: unless-stopped
     labels:
     - "traefik.enable=true"
@@ -73,6 +76,7 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-backend.entrypoints=websecure,web"
@@ -88,6 +92,7 @@ services:
     depends_on:
       api:
         condition: service_started
+    restart: unless-stopped
 
   web:
     image: ghcr.io/m1xxos/omnivore-web:sha-4d3302c
@@ -101,8 +106,10 @@ services:
     depends_on:
       api:
         condition: service_healthy
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.omnivore-web.tls.certresolver=based"
       - "traefik.http.routers.omnivore-web.entrypoints=websecure,web"
       - "traefik.http.services.omnivore-web.loadbalancer.server.port=8080"
       - "traefik.http.routers.omnivore-web.rule=Host(`omnivore.m1xxos.me`) && PathPrefix(`/api/client/auth`) || PathPrefix(`/api/save`)"
@@ -141,6 +148,7 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
+    restart: unless-stopped
 
   redis:
     image: "redis:7.2.4"
@@ -153,6 +161,7 @@ services:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
     volumes:
       - redis_data:/data
+    restart: unless-stopped
 
   minio:
     image: minio/minio
@@ -171,6 +180,7 @@ services:
     command: server /data
     volumes:
       - minio_data:/data
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-bucket.entrypoints=websecure,web"
@@ -206,6 +216,7 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-mail.entrypoints=websecure,web"
