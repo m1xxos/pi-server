@@ -32,12 +32,14 @@ services:
     - "--entrypoints.websecure.http.tls=true"
     # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
     # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-    - "--certificatesresolvers.based.acme.tlschallenge=true"
     - "--certificatesresolvers.based.acme.email=bulynin.misha@gmail.com"
     - "--certificatesresolvers.based.acme.storage=/letsencrypt/acme.json"
+    - "--certificatesresolvers.based.acme.dnsChallenge.provider=cloudflare"
     - "--metrics.prometheus=true"
     - "--accesslog=true"
     - "--accesslog.addinternals"
+    env_file:
+      - traefik.env
     ports:
     - "80:80"
     - "443:443"
