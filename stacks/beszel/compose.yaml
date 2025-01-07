@@ -9,6 +9,15 @@ services:
       - 8090:8090
     volumes:
       - ./beszel_data:/beszel_data
+    networks:
+      - omnivore_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.beszel.entrypoints=websecure,web"
+      - "traefik.http.services.beszel.loadbalancer.server.port=8090"
+      - "traefik.http.routers.beszel.rule=Host(`beszel.pi.m1xxos.me`)"
+      - "traefik.http.routers.beszel.service=beszel"
+      - "traefik.http.routers.beszel.tls.certresolver=based"
 
   beszel-agent:
     image: henrygd/beszel-agent:latest
@@ -21,3 +30,7 @@ services:
       PORT: 45876
       # Do not remove quotes around the key
       KEY: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEQEgE0tVOvsZypIGjN7PQub9XVQ3zZFIiHYoZigg4p1'
+
+networks:
+  omnivore_default:
+    external: true
