@@ -118,6 +118,7 @@ services:
       - "7070:8080"
     env_file:
       - .env
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-imageproxy.entrypoints=websecure,web"
