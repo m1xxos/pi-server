@@ -12,7 +12,6 @@ x-common:
   &common
   networks:
     - traefik_proxy
-    - omnivore
   env_file:
     - .env
   restart: unless-stopped
@@ -29,7 +28,7 @@ services:
       - .env
     restart: unless-stopped
     networks:
-      - omnivore
+      - traefik_proxy
 
   api:
     <<: *common
@@ -124,7 +123,7 @@ services:
       - redis_data:/data
     restart: unless-stopped
     networks:
-      - omnivore
+      - traefik_proxy
 
   minio:
     image: minio/minio
@@ -146,7 +145,6 @@ services:
     restart: unless-stopped
     networks:
       - traefik_proxy
-      - omnivore
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-bucket.entrypoints=websecure,web"
