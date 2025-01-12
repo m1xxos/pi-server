@@ -1,0 +1,40 @@
+services:
+  
+  traefik:
+      image: traefik:v3.2
+      container_name: traefik
+      command:
+      - "--log.level=ERROR"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls=true"
+      # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--certificatesresolvers.based.acme.email=bulynin.misha@gmail.com"
+      - "--certificatesresolvers.based.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.based.acme.dnsChallenge.provider=cloudflare"
+      - "--metrics.prometheus=true"
+      - "--accesslog=true"
+      - "--accesslog.addinternals"
+      env_file:
+        - traefik.env
+      networks:
+      - proxy
+      ports:
+      - "80:80"
+      - "443:443"
+      - "8088:8080"
+      volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+      restart: unless-stopped
+      labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
+networks:
+  proxy:

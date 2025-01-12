@@ -10,7 +10,7 @@ services:
     volumes:
       - ./beszel_data:/beszel_data
     networks:
-      - omnivore_default
+      - traefik_proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.beszel.entrypoints=websecure,web"
@@ -32,5 +32,5 @@ services:
       KEY: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEQEgE0tVOvsZypIGjN7PQub9XVQ3zZFIiHYoZigg4p1'
 
 networks:
-  omnivore_default:
+  traefik_proxy:
     external: true

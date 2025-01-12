@@ -8,6 +8,15 @@ x-postgres:
     timeout: 12s
     retries: 3
 
+x-common:
+  &common
+  networks:
+    - traefik_proxy
+    - omnivore
+  env_file:
+    - .env
+  restart: unless-stopped
+
 services:
   postgres:
     <<: *postgres-common
@@ -19,42 +28,11 @@ services:
     env_file:
       - .env
     restart: unless-stopped
-  
-  traefik:
-    image: traefik:v3.2
-    container_name: traefik
-    command:
-    - "--log.level=ERROR"
-    - "--api.insecure=true"
-    - "--providers.docker=true"
-    - "--providers.docker.exposedbydefault=false"
-    - "--entryPoints.web.address=:80"
-    - "--entryPoints.websecure.address=:443"
-    - "--entrypoints.websecure.http.tls=true"
-    # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-    # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-    - "--certificatesresolvers.based.acme.email=bulynin.misha@gmail.com"
-    - "--certificatesresolvers.based.acme.storage=/letsencrypt/acme.json"
-    - "--certificatesresolvers.based.acme.dnsChallenge.provider=cloudflare"
-    - "--metrics.prometheus=true"
-    - "--accesslog=true"
-    - "--accesslog.addinternals"
-    env_file:
-      - traefik.env
-    ports:
-    - "80:80"
-    - "443:443"
-    - "8088:8080"
-    volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    - "./letsencrypt:/letsencrypt"
-    restart: unless-stopped
-    labels:
-    - "traefik.enable=true"
-    - "traefik.http.routers.traefik.entrypoints=websecure"
-    - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+    networks:
+      - omnivore
 
   api:
+    <<: *common
     image: ghcr.io/m1xxos/omnivore-api:sha-cd4078d
     container_name: "omnivore-api"
     ports:
@@ -64,12 +42,9 @@ services:
       interval: 15s
       timeout: 90s
       retries: 6
-    env_file:
-      - .env
     depends_on:
       postgres:
         condition: service_healthy
-    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-backend.entrypoints=websecure,web"
@@ -78,28 +53,24 @@ services:
       - "traefik.http.routers.omnivore-backend.service=omnivore-backend"
 
   queue-processor:
+    <<: *common
     image: ghcr.io/m1xxos/omnivore-queue-processor:sha-603b5d3
     container_name: "omnivore-queue-processor"
-    env_file:
-      - .env
     depends_on:
       api:
         condition: service_started
-    restart: unless-stopped
 
   web:
+    <<: *common
     image: ghcr.io/m1xxos/omnivore-web:sha-4d3302c
     container_name: "omnivore-web"
     # ports:
     #   - "3000:8080"
     expose:
       - 8080
-    env_file:
-      - .env
     depends_on:
       api:
         condition: service_healthy
-    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-web.tls.certresolver=based"
@@ -112,13 +83,11 @@ services:
       - "traefik.http.routers.omnivore-web-root.service=omnivore-web"
 
   image-proxy:
+    <<: *common
     image: ghcr.io/m1xxos/omnivore-image-proxy:sha-3cf79c6
     container_name: "omnivore-image-proxy"
     ports:
       - "7070:8080"
-    env_file:
-      - .env
-    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-imageproxy.entrypoints=websecure,web"
@@ -129,20 +98,18 @@ services:
       - "traefik.http.routers.omnivore-imageproxy.middlewares=omnivore-imageproxy-rewrite"
 
   content-fetch:
+    <<: *common
     image: ghcr.io/m1xxos/omnivore-content-fetch:sha-7afc183
     container_name: "omnivore-content-fetch"
     ports:
       - "9090:8080"
     environment:
       - USE_FIREFOX=true # Using Firefox here because the official chrome version seems to freeze a lot in Docker.
-    env_file:
-      - .env
     depends_on:
       redis:
         condition: service_healthy
       api:
         condition: service_healthy
-    restart: unless-stopped
 
   redis:
     image: "redis:7.2.4"
@@ -156,6 +123,8 @@ services:
     volumes:
       - redis_data:/data
     restart: unless-stopped
+    networks:
+      - omnivore
 
   minio:
     image: minio/minio
@@ -175,6 +144,9 @@ services:
     volumes:
       - minio_data:/data
     restart: unless-stopped
+    networks:
+      - traefik_proxy
+      - omnivore
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-bucket.entrypoints=websecure,web"
@@ -183,16 +155,14 @@ services:
       - "traefik.http.routers.omnivore-bucket.service=omnivore-bucket"
 
   mail-watch-server:
+    <<: *common
     image: ghcr.io/m1xxos/omnivore-mail-watch-server:sha-0a759f5
     container_name: "omnivore-mail-watch-server"
     ports:
       - "4398:8080"
-    env_file:
-      - .env
     depends_on:
       redis:
         condition: service_healthy
-    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-mail.entrypoints=websecure,web"
@@ -204,3 +174,8 @@ volumes:
   pgdata:
   redis_data:
   minio_data:
+
+networks:
+  traefik_proxy:
+    external: true
+  omnivore:
