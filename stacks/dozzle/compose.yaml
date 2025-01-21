@@ -7,3 +7,16 @@ services:
     ports:
       - 8080:8080
     restart: unless-stopped
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dozzle.entrypoints=websecure,web"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.pi.m1xxos.me`)"
+      - "traefik.http.routers.dozzle.service=dozzle"
+      - "traefik.http.routers.dozzle.tls.certresolver=based"
+
+networks:
+  traefik_proxy:
+    external: true
