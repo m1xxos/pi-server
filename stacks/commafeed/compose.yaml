@@ -11,3 +11,15 @@ services:
           memory: 256M
     ports:
       - 8082:8082
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.commafeed.entrypoints=web,websecure"
+      - "traefik.http.services.commafeed.loadbalancer.server.port=8082"
+      - "traefik.http.routers.commafeed.rule=Host(`commafeed.pi.m1xxos.me`)"
+      - "traefik.http.routers.commafeed.tls.certresolver=based"
+
+networks:
+  traefik_proxy:
+    external: true
