@@ -63,8 +63,6 @@ services:
     <<: *common
     image: ghcr.io/m1xxos/omnivore-web:sha-4d3302c
     container_name: "omnivore-web"
-    # ports:
-    #   - "3000:8080"
     expose:
       - 8080
     depends_on:
