@@ -1,0 +1,35 @@
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v2.5.0 # 
+    container_name: mealie
+    restart: unless-stopped
+    ports:
+        - "9925:9000" # 
+    networks:
+      - traefik_proxy
+    deploy:
+      resources:
+        limits:
+          memory: 1000M # 
+    volumes:
+      - mealie-data:/app/data/
+    environment:
+      # Set Backend ENV Variables Here
+      ALLOW_SIGNUP: "false"
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Moscow
+      BASE_URL: https://mealie.m1xxos.me
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mealie.entrypoints=websecure,web"
+      - "traefik.http.services.mealie.loadbalancer.server.port=9000"
+      - "traefik.http.routers.mealie.rule=Host(`mealie.m1xxos.me`)"
+      - "traefik.http.routers.mealie.service=mealie"
+      - "traefik.http.routers.mealie.tls.certresolver=based"
+volumes:
+  mealie-data:
+
+networks:
+  traefik_proxy:
+    external: true
