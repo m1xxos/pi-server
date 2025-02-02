@@ -11,8 +11,6 @@ services:
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
       - "--entrypoints.websecure.http.tls=true"
-      # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--certificatesresolvers.based.acme.email=bulynin.misha@gmail.com"
       - "--certificatesresolvers.based.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.based.acme.dnsChallenge.provider=cloudflare"

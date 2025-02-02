@@ -9,8 +9,6 @@ services:
       resources:
         limits:
           memory: 256M
-    ports:
-      - 8082:8082
     networks:
       - traefik_proxy
     labels:
