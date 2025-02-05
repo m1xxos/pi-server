@@ -6,4 +6,7 @@ my pi deployment
 
 * Dockge orchestration
 * Beszel monitoring
+* Dozzle logging
 * Onivore deployment
+* Commafeed for rss
+* Singbox proxy
