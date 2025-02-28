@@ -16,7 +16,6 @@ services:
       - "--certificatesresolvers.based.acme.dnsChallenge.provider=cloudflare"
       - "--metrics.prometheus=true"
       - "--accesslog=true"
-      - "--accesslog.addinternals"
       env_file:
         - traefik.env
       networks:
