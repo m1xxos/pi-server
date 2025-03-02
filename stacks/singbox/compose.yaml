@@ -1,13 +1,14 @@
 services:
 
   sing-box:
-    image: ghcr.io/sagernet/sing-box:v1.10.7
+    image: ghcr.io/sagernet/sing-box:v1.11.4
     container_name: sing-box
     restart: unless-stopped
     expose:
       - 1080
     ports:
       - 1080:1080
+      - 1070:1070
     volumes:
       - ./sing-box/:/etc/sing-box/
     command: -D /var/lib/sing-box -C /etc/sing-box/ run
