@@ -17,12 +17,12 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: Europe/Moscow
-      BASE_URL: https://mealie.m1xxos.me
+      BASE_URL: https://mealie.m1xxos.tech
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mealie.entrypoints=websecure,web"
       - "traefik.http.services.mealie.loadbalancer.server.port=9000"
-      - "traefik.http.routers.mealie.rule=Host(`mealie.m1xxos.me`)"
+      - "traefik.http.routers.mealie.rule=Host(`mealie.m1xxos.tech`)"
       - "traefik.http.routers.mealie.service=mealie"
       - "traefik.http.routers.mealie.tls.certresolver=based"
 volumes:

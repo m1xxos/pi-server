@@ -15,7 +15,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.beszel.entrypoints=websecure,web"
       - "traefik.http.services.beszel.loadbalancer.server.port=8090"
-      - "traefik.http.routers.beszel.rule=Host(`beszel.pi.m1xxos.me`)"
+      - "traefik.http.routers.beszel.rule=Host(`beszel.pi.m1xxos.tech`)"
       - "traefik.http.routers.beszel.service=beszel"
       - "traefik.http.routers.beszel.tls.certresolver=based"
 

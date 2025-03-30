@@ -13,7 +13,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dozzle.entrypoints=websecure,web"
       - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
-      - "traefik.http.routers.dozzle.rule=Host(`dozzle.pi.m1xxos.me`)"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.pi.m1xxos.tech`)"
       - "traefik.http.routers.dozzle.service=dozzle"
       - "traefik.http.routers.dozzle.tls.certresolver=based"
 

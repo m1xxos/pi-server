@@ -15,7 +15,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.commafeed.entrypoints=web,websecure"
       - "traefik.http.services.commafeed.loadbalancer.server.port=8082"
-      - "traefik.http.routers.commafeed.rule=Host(`commafeed.pi.m1xxos.me`)"
+      - "traefik.http.routers.commafeed.rule=Host(`commafeed.pi.m1xxos.tech`)"
       - "traefik.http.routers.commafeed.tls.certresolver=based"
 
 networks:
