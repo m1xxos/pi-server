@@ -1,6 +1,6 @@
 services:
   beszel:
-    image: henrygd/beszel:0.9.1
+    image: henrygd/beszel:0.10.2
     container_name: beszel
     restart: unless-stopped
     extra_hosts:
