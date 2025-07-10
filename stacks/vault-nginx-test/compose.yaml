@@ -1,0 +1,27 @@
+services:
+  nginx:
+    image: nginx:1.29.0
+    restart: unless-stopped
+    volumes:
+      - vault-agent-data:/usr/share/nginx/html:ro
+    depends_on:
+      - vault-agent
+    ports:
+      - "8080:80"
+  
+  vault-agent:
+    image: hashicorp/vault:1.20
+    restart: unless-stopped
+    command: ["agent", "-config=/etc/vault-agent-config/agent-config.hcl"]
+    environment:
+      - VAULT_ADDR=https://vault.local.m1xxos.tech  # Замените на адрес вашего Vault сервера
+    volumes:
+      - ./vault-agent-config:/etc/vault-agent-config:ro
+      - vault-agent-data:/vault-agent-output
+
+volumes:
+  vault-agent-data:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs

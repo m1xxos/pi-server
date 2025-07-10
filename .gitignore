@@ -1,2 +1,3 @@
 *.retry
 ansible/.vault_pass
+stacks/vault-nginx-test/vault-agent-config/.vault-token
