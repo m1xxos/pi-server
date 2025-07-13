@@ -18,6 +18,12 @@ services:
     volumes:
       - ./vault-agent-config:/etc/vault-agent-config:ro
       - vault-agent-data:/vault-agent-output
+  
+  postgresql:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: $DB_PG_PASS
 
 volumes:
   vault-agent-data:
