@@ -8,7 +8,6 @@ services:
       - server
     networks:
       - traefik_proxy
-      - backend
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.adventurelogweb.entrypoints=web,websecure"
@@ -17,28 +16,25 @@ services:
       - "traefik.http.routers.adventurelogweb.tls.certresolver=based"
 
   db:
-    image: postgis/postgis:16-3.5
+    image: imresamu/postgis:16-3.5
     container_name: adventurelog-db
     restart: unless-stopped
     env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     networks:
-      - backend
+      - traefik_proxy
 
   server:
     image: ghcr.io/seanmorley15/adventurelog-backend:latest
     container_name: adventurelog-backend
     restart: unless-stopped
     env_file: .env
-    ports:
-      - "${BACKEND_PORT:-8016}:80"
     depends_on:
       - db
     volumes:
       - adventurelog_media:/code/media/
     networks:
-      - backend
       - traefik_proxy
     labels:
       - "traefik.enable=true"
@@ -54,4 +50,3 @@ volumes:
 networks:
   traefik_proxy:
     external: true
-  backend:
