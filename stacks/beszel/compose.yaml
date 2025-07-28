@@ -1,6 +1,6 @@
 services:
   beszel:
-    image: henrygd/beszel:0.11.1
+    image: henrygd/beszel:0.12.1
     container_name: beszel
     restart: unless-stopped
     extra_hosts:
@@ -20,7 +20,7 @@ services:
       - "traefik.http.routers.beszel.tls.certresolver=based"
 
   beszel-agent:
-    image: henrygd/beszel-agent:latest
+    image: henrygd/beszel-agent:0.12.1
     container_name: beszel-agent
     restart: unless-stopped
     network_mode: host
