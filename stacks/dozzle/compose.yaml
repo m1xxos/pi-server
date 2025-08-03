@@ -7,6 +7,8 @@ services:
     ports:
       - 8080:8080
     restart: unless-stopped
+    environment:
+      - DOZZLE_REMOTE_AGENT=192.168.1.138:7007
     networks:
       - traefik_proxy
     labels:
