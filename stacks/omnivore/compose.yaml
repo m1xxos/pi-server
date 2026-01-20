@@ -145,7 +145,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-bucket.entrypoints=websecure,web"
       - "traefik.http.services.omnivore-bucket.loadbalancer.server.port=9000"
-      - "traefik.http.routers.omnivore-bucket.rule=Host(`omnivore.m1xxos.tech`) && PathPrefix(`/bucket`)"
+      - "traefik.http.routers.omnivore-bucket.rule=Host(`omnivore.m1xxos.tech`) && PathPrefix(`/omnivore`)"
       - "traefik.http.routers.omnivore-bucket.service=omnivore-bucket"
 
   mail-watch-server:
