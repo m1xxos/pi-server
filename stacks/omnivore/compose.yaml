@@ -126,9 +126,7 @@ services:
   minio:
     image: minio/minio
     expose:
-      - 1010
-    ports:
-      - "1010:9000"
+      - 9000
     healthcheck:
       test: [ "CMD", "mc", "ready", "local" ]
       interval: 5s
@@ -136,7 +134,7 @@ services:
     environment:
       - "MINIO_ACCESS_KEY=minio"
       - "MINIO_SECRET_KEY=miniominio"
-      - "AWS_S3_ENDPOINT_URL=http://minio:1010"
+      - "AWS_S3_ENDPOINT_URL=https://omnivore.m1xxos.tech/bucket"
     command: server /data
     volumes:
       - minio_data:/data
