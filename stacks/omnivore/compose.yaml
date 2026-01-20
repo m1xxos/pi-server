@@ -128,7 +128,7 @@ services:
     expose:
       - 9000
     ports:
-      - "9001:9000"
+      - "9001:9001"
     healthcheck:
       test: [ "CMD", "mc", "ready", "local" ]
       interval: 5s
