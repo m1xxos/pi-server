@@ -12,6 +12,7 @@ services:
       - ./confdir:/opt/adguardhome/conf
     networks:
       - traefik_proxy
+      - dns
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.adguardhome.entrypoints=web,websecure"
@@ -19,7 +20,25 @@ services:
       - "traefik.http.routers.adguardhome.tls=true"
       - "traefik.http.routers.adguardhome.tls.certresolver=based"
       - "traefik.http.services.adguardhome.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik_proxy"
+  dnsproxy:
+    image: "adguard/dnsproxy:v0.78.2"
+    container_name: dnsproxy
+    restart: unless-stopped
+    expose:
+      - 53/udp
+      - 53/tcp
+    networks:
+      - dns
+    environment:
+      HTTP_PROXY: http://192.168.1.77:1080
+      HTTPS_PROXY: http://192.168.1.77:1080
+    command: >
+      --upstream https://cloudflare-dns.com/dns-query
+      --fallback 8.8.8.8
+      --cache
 
 networks:
   traefik_proxy:
     external: true
+  dns:
