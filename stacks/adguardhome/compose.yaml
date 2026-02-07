@@ -1,0 +1,26 @@
+services:
+  adguardhome:
+    image: "adguard/adguardhome:v0.107.71"
+    container_name: adguardhome
+    restart: unless-stopped
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 853:853/tcp
+      - 3000:3000
+    volumes:
+      - ./workdir:/opt/adguardhome/work
+      - ./confdir:/opt/adguardhome/conf
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adguardhome.entrypoints=web,websecure"
+      - "traefik.http.routers.adguardhome.rule=Host(`dns.pi.m1xxos.tech`)"
+      - "traefik.http.routers.adguardhome.tls=true"
+      - "traefik.http.routers.adguardhome.tls.certresolver=based"
+      - "traefik.http.services.adguardhome.loadbalancer.server.port=80"
+
+networks:
+  traefik_proxy:
+    external: true
