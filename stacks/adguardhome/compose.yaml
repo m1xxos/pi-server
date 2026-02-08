@@ -23,15 +23,12 @@ services:
       - "traefik.docker.network=traefik_proxy"
 
   sni-proxy:
-    image: "traefik:v3.3"
+    image: "gogost/gost:latest"
     container_name: sni-proxy
     restart: unless-stopped
-    environment:
-      HTTP_PROXY: http://192.168.1.77:1080
-      HTTPS_PROXY: http://192.168.1.77:1080
     volumes:
-      - ./traefik-stream.yaml:/etc/traefik/traefik.yaml:ro
-      - ./dynamic.yaml:/etc/traefik/dynamic.yaml:ro
+      - ./gost.yaml:/etc/gost/gost.yaml:ro
+    command: ["-C", "/etc/gost/gost.yaml"]
     networks:
       - traefik_proxy
       - dns

@@ -1,0 +1,20 @@
+services:
+- name: sni-proxy
+  addr: ":443"
+  handler:
+    type: sni
+    chain: proxy-chain
+  listener:
+    type: tcp
+
+chains:
+- name: proxy-chain
+  hops:
+  - name: hop-0
+    nodes:
+    - name: http-proxy
+      addr: 192.168.1.77:1080
+      connector:
+        type: http
+      dialer:
+        type: tcp
