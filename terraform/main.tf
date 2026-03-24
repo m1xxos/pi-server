@@ -8,6 +8,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 5"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.8.1"
+    }
   }
   backend "s3" {
     endpoint                    = "https://storage.yandexcloud.net"
