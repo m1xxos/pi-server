@@ -5,7 +5,7 @@ terraform {
       version = "0.16.4"
     }
     cloudflare = {
-      source = "cloudflare/cloudflare"
+      source  = "cloudflare/cloudflare"
       version = "~> 5"
     }
   }
@@ -40,6 +40,6 @@ ephemeral "infisical_secret" "cloudflare_api_token" {
   workspace_id = local.infisical_workspace_id
 }
 
-provider cloudflare {
-    api_token = ephemeral.infisical_secret.cloudflare_api_token.value
+provider "cloudflare" {
+  api_token = ephemeral.infisical_secret.cloudflare_api_token.value
 }
