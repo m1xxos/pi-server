@@ -11,7 +11,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.adventurelogweb.entrypoints=web,websecure"
-      - "traefik.http.routers.adventurelogweb.rule=Host(`advlog.pi.m1xxos.tech`) && !(PathPrefix(`/media`) || PathPrefix(`/admin`) || PathPrefix(`/static`) || PathPrefix(`/accounts`))" # Replace with your domain
+      - "traefik.http.routers.adventurelogweb.rule=Host(`advlog.pi.m1xxos.online`) && !(PathPrefix(`/media`) || PathPrefix(`/admin`) || PathPrefix(`/static`) || PathPrefix(`/accounts`))" # Replace with your domain
       - "traefik.http.routers.adventurelogweb.tls=true"
       - "traefik.http.routers.adventurelogweb.tls.certresolver=based"
 
@@ -39,7 +39,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.adventurelogserver.entrypoints=web,websecure"
-      - "traefik.http.routers.adventurelogserver.rule=Host(`advlog.pi.m1xxos.tech`) && (PathPrefix(`/media`) || PathPrefix(`/admin`) || PathPrefix(`/static`) || PathPrefix(`/accounts`))" # Replace with your domain
+      - "traefik.http.routers.adventurelogserver.rule=Host(`advlog.pi.m1xxos.online`) && (PathPrefix(`/media`) || PathPrefix(`/admin`) || PathPrefix(`/static`) || PathPrefix(`/accounts`))" # Replace with your domain
       - "traefik.http.routers.adventurelogserver.tls=true"
       - "traefik.http.routers.adventurelogserver.tls.certresolver=based"
 

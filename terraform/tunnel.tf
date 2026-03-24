@@ -16,10 +16,10 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "omnivore" {
   config = {
     ingress = [
       {
-        hostname = "omnivore.m1xxos.live"
+        hostname = "omnivore.m1xxos.online"
         service  = "https://192.168.1.77"
         origin_request = {
-          origin_server_name = "omnivore.m1xxos.live"
+          origin_server_name = "omnivore.m1xxos.online"
         }
       },
       {

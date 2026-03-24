@@ -1,7 +1,7 @@
 http:
   routers:
     immich:
-      rule: "Host(`photos.m1xxos.tech`) || Host(`photos.pi.m1xxos.tech`)"
+      rule: "Host(`photos.m1xxos.online`) || Host(`photos.pi.m1xxos.online`)"
       service: "immich"
       entryPoints:
       - "websecure"

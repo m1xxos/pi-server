@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
     command: ["agent", "-config=/etc/vault-agent-config/agent-config.hcl"]
     environment:
-      - VAULT_ADDR=https://vault.local.m1xxos.tech  # Замените на адрес вашего Vault сервера
+      - VAULT_ADDR=https://vault.local.m1xxos.online  # Замените на адрес вашего Vault сервера
     volumes:
       - ./vault-agent-config:/etc/vault-agent-config:ro
       - vault-agent-data:/vault-agent-output

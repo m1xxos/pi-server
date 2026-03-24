@@ -17,7 +17,7 @@ template_config {
 }
 
 vault {
-  address = "https://vault.local.m1xxos.tech"
+  address = "https://vault.local.m1xxos.online"
 }
 
 env_template "CONTACTS_ADMIN_EMAIL" {
