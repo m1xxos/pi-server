@@ -51,10 +51,10 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "shisha" {
         }
       },
       {
-        hostname = "api.lms.m1xxos.online"
+        hostname = "lms-api.m1xxos.online"
         service  = "https://192.168.1.128"
         origin_request = {
-          origin_server_name = "api.lms.m1xxos.online"
+          origin_server_name = "lms-api.lms.m1xxos.online"
         }
       },
       {
@@ -111,7 +111,7 @@ resource "cloudflare_dns_record" "lms" {
 
 resource "cloudflare_dns_record" "lms_api" {
   zone_id = local.cloudflare_zone_id
-  name    = "api.lms"
+  name    = "lms-api"
   type    = "CNAME"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.shisha.id}.cfargotunnel.com"
   proxied = true
