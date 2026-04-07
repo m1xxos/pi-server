@@ -54,7 +54,7 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "shisha" {
         hostname = "lms-api.m1xxos.online"
         service  = "https://192.168.1.128"
         origin_request = {
-          origin_server_name = "lms-api.lms.m1xxos.online"
+          origin_server_name = "lms-api.m1xxos.online"
         }
       },
       {
