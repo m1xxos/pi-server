@@ -111,7 +111,7 @@ resource "cloudflare_dns_record" "lms" {
 
 resource "cloudflare_dns_record" "lms_api" {
   zone_id = local.cloudflare_zone_id
-  name    = "lms-api"
+  name    = "api.lms"
   type    = "CNAME"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.shisha.id}.cfargotunnel.com"
   proxied = true
