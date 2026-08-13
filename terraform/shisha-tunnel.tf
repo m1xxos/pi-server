@@ -58,6 +58,13 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "shisha" {
         }
       },
       {
+        hostname = "kaneo.m1xxos.online"
+        service  = "https://192.168.1.128"
+        origin_request = {
+          origin_server_name = "kaneo.m1xxos.online"
+        }
+      },
+      {
         service = "http_status:404"
       }
     ]
@@ -112,6 +119,15 @@ resource "cloudflare_dns_record" "lms" {
 resource "cloudflare_dns_record" "lms_api" {
   zone_id = local.cloudflare_zone_id
   name    = "lms-api"
+  type    = "CNAME"
+  content = "${cloudflare_zero_trust_tunnel_cloudflared.shisha.id}.cfargotunnel.com"
+  proxied = true
+  ttl     = 1
+}
+
+resource "cloudflare_dns_record" "kaneo" {
+  zone_id = local.cloudflare_zone_id
+  name    = "kaneo"
   type    = "CNAME"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.shisha.id}.cfargotunnel.com"
   proxied = true
