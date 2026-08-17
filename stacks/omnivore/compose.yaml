@@ -30,6 +30,21 @@ services:
     networks:
       - traefik_proxy
 
+  migrate:
+    image: ghcr.io/omnivore-app/sh-migrate:latest
+    container_name: "omnivore-migrate"
+    command: '/bin/sh ./packages/db/setup.sh'
+    env_file:
+      - .env
+    environment:
+      - NO_DEMO_USER=true # DB is already provisioned; skip the demo user insert
+    networks:
+      - traefik_proxy
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   api:
     <<: *common
     image: ghcr.io/omnivore-app/sh-backend:latest
@@ -44,6 +59,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.omnivore-backend.entrypoints=websecure,web"
