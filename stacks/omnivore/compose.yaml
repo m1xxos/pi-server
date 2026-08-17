@@ -165,6 +165,14 @@ services:
       - "traefik.http.routers.omnivore-mail.rule=Host(`omnivore.m1xxos.online`) && PathPrefix(`/mail`)"
       - "traefik.http.routers.omnivore-mail.service=omnivore-mail"
 
+  discover:
+    <<: *common
+    image: "ghcr.io/omnivore-app/sh-discover:latest"
+    container_name: "omnivore-discover"
+    depends_on:
+      redis:
+        condition: service_healthy
+
 volumes:
   pgdata:
   redis_data:
