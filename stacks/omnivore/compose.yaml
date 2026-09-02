@@ -113,7 +113,10 @@ services:
 
   content-fetch:
     <<: *common
-    image: ghcr.io/omnivore-app/sh-content-fetch:latest
+    build:
+      context: .
+      dockerfile: content-fetch.Dockerfile
+    image: omnivore-content-fetch-patched:latest
     container_name: "omnivore-content-fetch"
     ports:
       - "9090:8080"
