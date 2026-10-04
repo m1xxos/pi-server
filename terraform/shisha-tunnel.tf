@@ -23,13 +23,6 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "shisha" {
         }
       },
       {
-        hostname = "cloud.m1xxos.online"
-        service  = "https://192.168.1.128"
-        origin_request = {
-          origin_server_name = "cloud.m1xxos.online"
-        }
-      },
-      {
         hostname = "finn.m1xxos.online"
         service  = "https://192.168.1.128"
         origin_request = {
@@ -74,15 +67,6 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "shisha" {
 resource "cloudflare_dns_record" "photos" {
   zone_id = local.cloudflare_zone_id
   name    = "photos"
-  type    = "CNAME"
-  content = "${cloudflare_zero_trust_tunnel_cloudflared.shisha.id}.cfargotunnel.com"
-  proxied = true
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "cloud" {
-  zone_id = local.cloudflare_zone_id
-  name    = "cloud"
   type    = "CNAME"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.shisha.id}.cfargotunnel.com"
   proxied = true
