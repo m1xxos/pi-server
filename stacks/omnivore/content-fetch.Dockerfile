@@ -11,8 +11,10 @@ ARG PARSER=/app/packages/puppeteer-parse/build/src/index.js
 RUN set -eu; \
     grep -q 'requestCount++ > 100' "$PARSER"; \
     grep -q 'timeout: 30 \* 1000' "$PARSER"; \
+    grep -q "waitUntil: \\['load'\\]" "$PARSER"; \
     sed -i \
       -e 's/requestCount++ > 100/requestCount++ > 1000/' \
       -e 's/timeout: 30 \* 1000/timeout: 60 * 1000/' \
       -e "s/for 30 seconds/for 60 seconds/" \
+      -e "s/waitUntil: \\['load'\\]/waitUntil: \\['domcontentloaded'\\]/" \
       "$PARSER"
